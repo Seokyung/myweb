@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App /> //App.js의 function App()을 불러옴
+    <App /> {/*App.js의 function App()을 불러옴*/}
   </React.StrictMode>,
   document.getElementById('root') //pubic의 index.html 안에 있는 <body>태그 안의 <div>태그(id가 root인)를 가져옴
 );
