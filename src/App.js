@@ -1,5 +1,6 @@
 import React from "react";
 import { Image, Divider, Header, Icon, Button, Grid } from "semantic-ui-react";
+import Buttons from "./buttons.js";
 import Comments from "./comments.js";
 import sunbaGuitar from "./img/sunbaGuitar.jpeg";
 
@@ -11,30 +12,7 @@ function App() {
           <Image src={sunbaGuitar} style={{ width: "400px" }} centered />
         </Grid.Row>
         <Grid.Row>
-          <Button
-            color="red"
-            content="Like"
-            icon="heart"
-            label={{
-              basic: true,
-              color: "red",
-              pointing: "left",
-              content: "0",
-            }}
-          />
-          <Button
-            basic
-            color="blue"
-            content="Share"
-            icon="fork"
-            label={{
-              as: "a",
-              basic: true,
-              color: "blue",
-              pointing: "left",
-              content: "0",
-            }}
-          />
+          <Buttons />
         </Grid.Row>
       </Grid>
       <br />
@@ -44,9 +22,9 @@ function App() {
 
       <br />
       <Divider horizontal>
-        <Header as="h4">
-          <Icon name="share" />
-          Share With
+        <Header as="h5">
+          <Icon name="hand point down outline" />
+          Contact Me!
         </Header>
       </Divider>
       <br />
@@ -62,10 +40,22 @@ function App() {
           <Button color="google plus">
             <Icon name="google" /> Google
           </Button>
-          <Button color="instagram">
+          <Button
+            color="instagram"
+            onClick={() =>
+              window.open("https://www.instagram.com/seo_kyung_tell/")
+            }
+          >
             <Icon name="instagram" /> Instagram
           </Button>
-          <Button color="youtube">
+          <Button
+            color="youtube"
+            onClick={() =>
+              window.open(
+                "https://www.youtube.com/channel/UCXI8uJLT7ukmrBMbSBk9puQ/featured"
+              )
+            }
+          >
             <Icon name="youtube" /> YouTube
           </Button>
         </Grid>

@@ -75,6 +75,7 @@ class Comments extends React.Component {
                         ...prevState.commentsList,
                         this.state.inputContent,
                       ],
+                      inputContent : ""
                     };
                   })
                 }
