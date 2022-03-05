@@ -11,8 +11,32 @@ import {
 import "./comments.css";
 import userIcon from "./img/user.png";
 
+function SingleComment(detail) {
+  return (
+    <Comment>
+      <Comment.Avatar src={userIcon} />
+      <Comment.Content>
+        <Comment.Author as="a">순돌</Comment.Author>
+        <Comment.Metadata>
+          <div>오늘 5:42PM</div>
+        </Comment.Metadata>
+        <Comment.Text>{detail.content}</Comment.Text>
+      </Comment.Content>
+    </Comment>
+  );
+}
+
 class Comments extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      inputContent: "",
+      commentsList: [],
+    };
+  }
+
   render() {
+    console.log(this.state.commentsList);
     return (
       <Grid centered>
         <div id="commentCenter">
@@ -24,30 +48,38 @@ class Comments extends React.Component {
               </Header>
             </Divider>
 
-            <Comment>
-              <Comment.Avatar src={userIcon} />
-              <Comment.Content>
-                <Comment.Author as="a">순돌</Comment.Author>
-                <Comment.Metadata>
-                  <div>오늘 5:42PM</div>
-                </Comment.Metadata>
-                <Comment.Text>레오 간지 개쩌러</Comment.Text>
-                <Comment.Actions>
-                  <Comment.Action>답글 달기</Comment.Action>
-                </Comment.Actions>
-                <Form reply>
-                  <Form.TextArea
-                    style={{ width: "550px", minHeight: "100px" }}
-                  />
-                  <Button
-                    content="Add Reply"
-                    labelPosition="left"
-                    icon="edit"
-                    primary
-                  />
-                </Form>
-              </Comment.Content>
-            </Comment>
+            {this.state.commentsList.map((comments) => (
+              <SingleComment content={comments} />
+            ))}
+
+            <Form reply>
+              {/*onChange시 inputContent의 값이 TextArea에 있는 새로운 입력값으로 바뀜*/}
+              <Form.TextArea
+                style={{ width: "550px", minHeight: "100px" }}
+                placeholder="댓글을 입력해주세요."
+                value={this.state.inputContent}
+                onChange={(e) =>
+                  this.setState({ inputContent: e.target.value })
+                }
+              />
+
+              <Button
+                content="Add Reply"
+                labelPosition="left"
+                icon="edit"
+                primary
+                onClick={() =>
+                  this.setState((prevState) => {
+                    return {
+                      commentsList: [
+                        ...prevState.commentsList,
+                        this.state.inputContent,
+                      ],
+                    };
+                  })
+                }
+              />
+            </Form>
           </Comment.Group>
         </div>
       </Grid>
