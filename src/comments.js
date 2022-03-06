@@ -17,11 +17,15 @@ function SingleComment(detail) {
     <Comment>
       <Comment.Avatar src={userIcon} />
       <Comment.Content>
-        <Comment.Author as="a">순돌</Comment.Author>
+        <Comment.Author as="a" style={{ color: "white" }}>
+          순돌
+        </Comment.Author>
         <Comment.Metadata>
-          <div>{detail.info.time}</div>
+          <div style={{ color: "white" }}>{detail.info.time}</div>
         </Comment.Metadata>
-        <Comment.Text>{detail.info.content}</Comment.Text>
+        <Comment.Text style={{ color: "white" }}>
+          {detail.info.content}
+        </Comment.Text>
       </Comment.Content>
     </Comment>
   );
@@ -44,7 +48,7 @@ class Comments extends React.Component {
         <div id="commentCenter">
           <Comment.Group>
             <Divider horizontal>
-              <Header as="h3">
+              <Header as="h3" style={{ color: "white" }}>
                 <Icon name="comments" />
                 Comments
               </Header>

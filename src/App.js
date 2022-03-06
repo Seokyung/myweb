@@ -6,7 +6,7 @@ import sunbaGuitar from "./img/sunbaGuitar.jpeg";
 
 function App() {
   return (
-    <div>
+    <div style = {{backgroundColor : "black"}}>
       <br />
       <Grid centered>
         <Grid.Row>
@@ -23,7 +23,7 @@ function App() {
 
       <br />
       <Divider horizontal>
-        <Header as="h5">
+        <Header as="h5" style = {{color : "grey"}}>
           <Icon name="hand point down outline" />
           Contact Me!
         </Header>
