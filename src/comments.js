@@ -10,6 +10,7 @@ import {
 } from "semantic-ui-react";
 import "./comments.css";
 import userIcon from "./img/user.png";
+import moment from "moment";
 
 function SingleComment(detail) {
   return (
@@ -18,9 +19,9 @@ function SingleComment(detail) {
       <Comment.Content>
         <Comment.Author as="a">순돌</Comment.Author>
         <Comment.Metadata>
-          <div>오늘 5:42PM</div>
+          <div>{detail.info.time}</div>
         </Comment.Metadata>
-        <Comment.Text>{detail.content}</Comment.Text>
+        <Comment.Text>{detail.info.content}</Comment.Text>
       </Comment.Content>
     </Comment>
   );
@@ -31,6 +32,7 @@ class Comments extends React.Component {
     super();
     this.state = {
       inputContent: "",
+      inputTime: "",
       commentsList: [],
     };
   }
@@ -49,7 +51,7 @@ class Comments extends React.Component {
             </Divider>
 
             {this.state.commentsList.map((comments) => (
-              <SingleComment content={comments} />
+              <SingleComment info={comments} />
             ))}
 
             <Form reply>
@@ -64,21 +66,31 @@ class Comments extends React.Component {
               />
 
               <Button
+                floated="right"
                 content="Add Reply"
                 labelPosition="left"
                 icon="edit"
                 primary
-                onClick={() =>
-                  this.setState((prevState) => {
-                    return {
-                      commentsList: [
-                        ...prevState.commentsList,
-                        this.state.inputContent,
-                      ],
-                      inputContent : ""
-                    };
-                  })
-                }
+                onClick={() => {
+                  if (this.state.inputContent != "") {
+                    this.setState((prevState) => {
+                      return {
+                        commentsList: [
+                          ...prevState.commentsList,
+                          {
+                            content: this.state.inputContent,
+                            time: moment().format(
+                              "YYYY년 MM월 DD일 HH시 mm분 ss초"
+                            ),
+                          },
+                        ],
+                        inputContent: "",
+                      };
+                    });
+                  } else {
+                    alert("내용을 입력해주세요!");
+                  }
+                }}
               />
             </Form>
           </Comment.Group>

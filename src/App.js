@@ -7,6 +7,7 @@ import sunbaGuitar from "./img/sunbaGuitar.jpeg";
 function App() {
   return (
     <div>
+      <br />
       <Grid centered>
         <Grid.Row>
           <Image src={sunbaGuitar} style={{ width: "400px" }} centered />
@@ -31,13 +32,13 @@ function App() {
 
       <div>
         <Grid centered>
-          <Button color="facebook">
+          <Button color="facebook" onClick={() => alert("준비중입니다.")}>
             <Icon name="facebook" /> Facebook
           </Button>
-          <Button color="twitter">
+          <Button color="twitter" onClick={() => alert("준비중입니다.")}>
             <Icon name="twitter" /> Twitter
           </Button>
-          <Button color="google plus">
+          <Button color="google plus" onClick={() => alert("준비중입니다.")}>
             <Icon name="google" /> Google
           </Button>
           <Button
