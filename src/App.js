@@ -11,6 +11,7 @@ import {
 } from "semantic-ui-react";
 import Buttons from "./buttons.js";
 import Comments from "./comments.js";
+import VisitorsModal from "./modal.js";
 import auth from "./fb.js";
 import sunbaGuitar from "./img/sunbaGuitar.jpeg";
 
@@ -21,11 +22,24 @@ class App extends React.Component {
     super();
     this.state = {
       userName: "Stranger",
+      isModalOpen: false,
+      visitors: ["럭시", "키젤", "다비치", "흑태풍", "JMT"],
     };
   }
+
+  toggleModal = () =>
+    this.setState((prevState) => {
+      return { isModalOpen: !prevState.isModalOpen };
+    });
+
   render() {
     return (
       <div style={{ backgroundColor: "black" }}>
+        <VisitorsModal
+          isOpen={this.state.isModalOpen}
+          closeModal={this.toggleModal}
+          visitorsList = {this.state.visitors}
+        />
         <h1
           style={{
             textAlign: "center",
@@ -116,13 +130,20 @@ class App extends React.Component {
             <Image src={sunbaGuitar} style={{ width: "400px" }} centered />
           </Grid.Row>
           <Grid.Row>
-            <Buttons />
+            <Buttons
+              openModal={this.toggleModal}
+              visitors={this.state.visitors.length}
+            />
           </Grid.Row>
         </Grid>
         <br />
         <br />
 
-        <Comments userNameComment = {this.state.userName} />
+        <Grid centered columns={3}>
+          <Grid.Column>
+            <Comments userNameComment={this.state.userName} />
+          </Grid.Column>
+        </Grid>
 
         <br />
         <Divider horizontal>

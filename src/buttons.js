@@ -6,7 +6,7 @@ class Buttons extends React.Component {
     super();
     this.state = {
       likes: 0,
-      shared: 0,
+      visitors: 0,
     };
   }
   render() {
@@ -30,20 +30,16 @@ class Buttons extends React.Component {
         />
         <Button
           color="blue"
-          content="Share"
-          icon="fork"
+          content="Visitors"
+          icon="users"
           label={{
             as: "a",
             basic: true,
             color: "blue",
             pointing: "left",
-            content: this.state.shared,
+            content: this.props.visitors,
           }}
-          onClick={() =>
-            this.setState((prevState) => {
-              return { shared: prevState.shared + 1 };
-            })
-          }
+          onClick={() => this.props.openModal()}
         />
       </div>
     );
