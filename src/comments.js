@@ -18,7 +18,7 @@ function SingleComment(detail) {
       <Comment.Avatar src={userIcon} />
       <Comment.Content>
         <Comment.Author as="a" style={{ color: "white" }}>
-          순돌
+          {detail.info.userNameComment}
         </Comment.Author>
         <Comment.Metadata>
           <div style={{ color: "white" }}>{detail.info.time}</div>
@@ -37,6 +37,7 @@ class Comments extends React.Component {
     this.state = {
       inputContent: "",
       inputTime: "",
+      userNameComment: "",
       commentsList: [],
     };
   }
@@ -86,6 +87,7 @@ class Comments extends React.Component {
                             time: moment().format(
                               "YYYY년 MM월 DD일 HH시 mm분 ss초"
                             ),
+                            userNameComment: this.props.userNameComment,
                           },
                         ],
                         inputContent: "",

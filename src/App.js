@@ -122,7 +122,7 @@ class App extends React.Component {
         <br />
         <br />
 
-        <Comments />
+        <Comments userNameComment = {this.state.userName} />
 
         <br />
         <Divider horizontal>
