@@ -20,8 +20,17 @@ function SingleComment(detail) {
         <Comment.Author as="a" style={{ color: "white" }}>
           {detail.info.userNameComment}
         </Comment.Author>
-        <Comment.Metadata>
-          <div style={{ color: "white" }}>{detail.info.time}</div>
+        <Comment.Metadata style={{ color: "DarkGrey" }}>
+          {detail.info.time}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <Comment.Actions>
+            <Comment.Action
+              style={{ color: "salmon" }}
+              onClick={() => alert("삭제됨")}
+            >
+              Delete
+            </Comment.Action>
+          </Comment.Actions>
         </Comment.Metadata>
         <Comment.Text style={{ color: "white" }}>
           {detail.info.content}
@@ -52,11 +61,12 @@ class Comments extends React.Component {
         });
         return comments;
       })
-      .then((res) => {this.setState({commentsList : res})});
+      .then((res) => {
+        this.setState({ commentsList: res });
+      });
   };
 
   render() {
-    console.log(this.state.commentsList);
     return (
       <div id="commentCenter">
         <Comment.Group>
@@ -82,27 +92,36 @@ class Comments extends React.Component {
 
             <Button
               floated="right"
-              content="Add Reply"
+              content="Comment"
               labelPosition="left"
               icon="edit"
               primary
               onClick={() => {
                 if (this.state.inputContent != "") {
-                  this.setState((prevState) => {
-                    return {
-                      commentsList: [
-                        ...prevState.commentsList,
-                        {
-                          content: this.state.inputContent,
-                          time: moment().format(
-                            "YYYY년 MM월 DD일 HH시 mm분 ss초"
-                          ),
-                          userNameComment: this.props.userNameComment,
-                        },
-                      ],
-                      inputContent: "",
-                    };
-                  });
+                  this.setState(
+                    (prevState) => {
+                      let newComment = {
+                        content: this.state.inputContent,
+                        time: moment().format(
+                          "YYYY년 MM월 DD일 HH시 mm분 ss초"
+                        ),
+                        userNameComment: this.props.userNameComment,
+                      };
+
+                      return {
+                        commentsList: [...prevState.commentsList, newComment],
+                        inputContent: "",
+                      };
+                    },
+                    () =>
+                      db
+                        .collection("comments")
+                        .add(
+                          this.state.commentsList[
+                            this.state.commentsList.length - 1
+                          ]
+                        )
+                  );
                 } else {
                   alert("내용을 입력해주세요!");
                 }
