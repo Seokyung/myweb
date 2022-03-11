@@ -14,7 +14,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
-export default auth;
+const db = firebase.firestore();
+export {auth, db};
 
 {/*
   module not found: error: package path . is not exported from package c:\dev\myweb\myweb\node_modules\firebase
