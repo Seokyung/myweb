@@ -188,12 +188,15 @@ class App extends React.Component {
             <Button color="facebook" onClick={() => alert("준비중입니다.")}>
               <Icon name="facebook" /> Facebook
             </Button>
+            &nbsp;&nbsp;&nbsp;
             <Button color="twitter" onClick={() => alert("준비중입니다.")}>
               <Icon name="twitter" /> Twitter
             </Button>
+            &nbsp;&nbsp;&nbsp;
             <Button color="google plus" onClick={() => alert("준비중입니다.")}>
               <Icon name="google" /> Google
             </Button>
+            &nbsp;&nbsp;&nbsp;
             <Button
               color="instagram"
               onClick={() =>
@@ -202,6 +205,7 @@ class App extends React.Component {
             >
               <Icon name="instagram" /> Instagram
             </Button>
+            &nbsp;&nbsp;&nbsp;
             <Button
               color="youtube"
               onClick={() =>
@@ -214,7 +218,15 @@ class App extends React.Component {
             </Button>
           </Grid>
         </div>
-        <br />
+        <div
+          style={{ paddingTop: "50px", paddingBottom: "40px" }}
+        >
+          <p
+            style={{ color: "Grey", textAlign: "center", fontSize: "12px" }}
+          >
+            Copyright 2022 by SKJ. All Rights Reserved.
+          </p>
+        </div>
       </div>
     );
   }

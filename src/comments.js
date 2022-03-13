@@ -6,11 +6,14 @@ import {
   Divider,
   Header,
   Icon,
+  Pagination,
+  Grid,
 } from "semantic-ui-react";
 import { db } from "./fb.js";
 import "./comments.css";
 import userIcon from "./img/user.png";
 import moment from "moment";
+import _ from "lodash";
 
 function SingleComment(detail) {
   return (
@@ -29,14 +32,16 @@ function SingleComment(detail) {
               onClick={() => {
                 //console.log(detail.info.userNameComment)
                 //console.log(detail.userName)
-                if (detail.info.userNameComment == detail.userName && detail.userName != "Stranger") {
+                if (
+                  detail.info.userNameComment == detail.userName &&
+                  detail.userName != "Stranger"
+                ) {
                   /*db.collection("comments")
                     .doc(detail.info.id)
                     .delete()
                     .then((res) => alert("수정 완료"));*/
-                }
-                else {
-                  alert("본인이 작성한 댓글만 수정할 수 있습니다.")
+                } else {
+                  alert("본인이 작성한 댓글만 수정할 수 있습니다.");
                 }
               }}
             >
@@ -45,14 +50,16 @@ function SingleComment(detail) {
             <Comment.Action
               style={{ color: "salmon" }}
               onClick={() => {
-                if (detail.info.userNameComment == detail.userName && detail.userName != "Stranger") {
+                if (
+                  detail.info.userNameComment == detail.userName &&
+                  detail.userName != "Stranger"
+                ) {
                   db.collection("comments")
                     .doc(detail.info.id)
                     .delete()
                     .then((res) => alert("삭제 완료"));
-                }
-                else {
-                  alert("본인이 작성한 댓글만 삭제할 수 있습니다.")
+                } else {
+                  alert("본인이 작성한 댓글만 삭제할 수 있습니다.");
                 }
               }}
             >
@@ -105,14 +112,7 @@ class Comments extends React.Component {
             </Header>
           </Divider>
 
-          {this.state.commentsList.map((comments) => (
-            <SingleComment
-              info={comments}
-              userName={this.props.userNameComment}
-            />
-          ))}
-
-          <Form reply>
+          <Form reply style={{ paddingBottom: "40px" }}>
             {/*onChange시 inputContent의 값이 TextArea에 있는 새로운 입력값으로 바뀜*/}
             <Form.TextArea
               style={{ minHeight: "100px" }}
@@ -120,7 +120,6 @@ class Comments extends React.Component {
               value={this.state.inputContent}
               onChange={(e) => this.setState({ inputContent: e.target.value })}
             />
-
             <Button
               floated="right"
               content="Comment"
@@ -159,6 +158,22 @@ class Comments extends React.Component {
               }}
             />
           </Form>
+          {_.orderBy(this.state.commentsList, "time", "asc").map((comments) => (
+            <SingleComment
+              info={comments}
+              userName={this.props.userNameComment}
+            />
+          ))}
+          <Grid
+            centered
+            style={{ paddingTop: "30px" }}
+          >
+            <Pagination
+              inverted
+              onPageChange={this.handlePaginationChange}
+              totalPages={5}
+            />
+          </Grid>
         </Comment.Group>
       </div>
     );
