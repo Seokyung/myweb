@@ -36,10 +36,11 @@ function SingleComment(detail) {
                   detail.info.userNameComment == detail.userName &&
                   detail.userName != "Stranger"
                 ) {
-                  /*db.collection("comments")
-                    .doc(detail.info.id)
-                    .delete()
-                    .then((res) => alert("수정 완료"));*/
+                  detail.selectComment(
+                    detail.index,
+                    detail.info.content,
+                    detail.info.id
+                  );
                 } else {
                   alert("본인이 작성한 댓글만 수정할 수 있습니다.");
                 }
@@ -82,9 +83,15 @@ class Comments extends React.Component {
       inputContent: "",
       inputTime: "",
       userNameComment: "",
+      inputId: "",
       commentsList: [],
+      formLocation: -1,
     };
   }
+
+  selectComment = (num, content, id) => {
+    this.setState({ formLocation: num, inputContent: content, inputId: id });
+  };
 
   componentDidMount = () => {
     db.collection("comments")
@@ -102,6 +109,7 @@ class Comments extends React.Component {
   };
 
   render() {
+    console.log(this.state);
     return (
       <div id="commentCenter">
         <Comment.Group>
@@ -112,62 +120,130 @@ class Comments extends React.Component {
             </Header>
           </Divider>
 
-          <Form reply style={{ paddingBottom: "40px" }}>
-            {/*onChange시 inputContent의 값이 TextArea에 있는 새로운 입력값으로 바뀜*/}
-            <Form.TextArea
-              style={{ minHeight: "100px" }}
-              placeholder="댓글을 입력해주세요."
-              value={this.state.inputContent}
-              onChange={(e) => this.setState({ inputContent: e.target.value })}
-            />
-            <Button
-              floated="right"
-              content="Comment"
-              labelPosition="left"
-              icon="edit"
-              primary
-              onClick={() => {
-                if (this.state.inputContent != "") {
-                  this.setState(
-                    (prevState) => {
-                      let newComment = {
-                        content: this.state.inputContent,
-                        time: moment().format(
-                          "YYYY년 MM월 DD일 HH시 mm분 ss초"
-                        ),
-                        userNameComment: this.props.userNameComment,
-                      };
-
-                      return {
-                        commentsList: [...prevState.commentsList, newComment],
-                        inputContent: "",
-                      };
-                    },
-                    () =>
-                      db
-                        .collection("comments")
-                        .add(
-                          this.state.commentsList[
-                            this.state.commentsList.length - 1
-                          ]
-                        )
-                  );
-                } else {
-                  alert("내용을 입력해주세요!");
+          {/*댓글 작성 시 보이는 댓글란*/}
+          {this.state.formLocation == -1 ? (
+            <Form reply style={{ paddingTop: "10px", paddingBottom: "40px" }}>
+              {/*onChange시 inputContent의 값이 TextArea에 있는 새로운 입력값으로 바뀜*/}
+              <Form.TextArea
+                style={{ minHeight: "100px" }}
+                placeholder="댓글을 입력해주세요."
+                value={this.state.inputContent}
+                onChange={(e) =>
+                  this.setState({ inputContent: e.target.value })
                 }
-              }}
-            />
-          </Form>
-          {_.orderBy(this.state.commentsList, "time", "asc").map((comments) => (
-            <SingleComment
-              info={comments}
-              userName={this.props.userNameComment}
-            />
-          ))}
-          <Grid
-            centered
-            style={{ paddingTop: "30px" }}
-          >
+              />
+              <Button
+                floated="right"
+                content="Comment"
+                labelPosition="left"
+                icon="edit"
+                primary
+                onClick={() => {
+                  if (this.state.inputContent != "") {
+                    this.setState(
+                      (prevState) => {
+                        let newComment = {
+                          content: this.state.inputContent,
+                          time: moment().format(
+                            "YYYY년 MM월 DD일 HH시 mm분 ss초"
+                          ),
+                          userNameComment: this.props.userNameComment,
+                        };
+
+                        return {
+                          commentsList: [...prevState.commentsList, newComment],
+                          inputContent: "",
+                        };
+                      },
+                      () =>
+                        db
+                          .collection("comments")
+                          .add(
+                            this.state.commentsList[
+                              this.state.commentsList.length - 1
+                            ]
+                          )
+                    );
+                  } else {
+                    alert("내용을 입력해주세요!");
+                  }
+                }}
+              />
+            </Form>
+          ) : null}
+
+          {/*댓글 수정 시 보이는 댓글*/}
+          {_.orderBy(this.state.commentsList, "time", "asc").map(
+            (comments, index) => (
+              <div style={{ padding: "10px" }}>
+                <SingleComment
+                  info={comments}
+                  userName={this.props.userNameComment}
+                  selectComment={this.selectComment}
+                  index={index}
+                />
+                {this.state.formLocation == index ? (
+                  <Form
+                    reply
+                    style={{ paddingTop: "10px", paddingBottom: "40px" }}
+                  >
+                    {/*onChange시 inputContent의 값이 TextArea에 있는 새로운 입력값으로 바뀜*/}
+                    <Form.TextArea
+                      style={{ minHeight: "100px" }}
+                      placeholder="댓글을 수정해주세요."
+                      value={this.state.inputContent}
+                      onChange={(e) =>
+                        this.setState({ inputContent: e.target.value })
+                      }
+                    />
+                    <Button
+                      floated="right"
+                      content="Update"
+                      labelPosition="left"
+                      icon="edit"
+                      onClick={() => {
+                        if (this.state.inputContent != "") {
+                          this.setState(
+                            (prevState) => {
+                              let newArr = _.filter(
+                                prevState.commentsList,
+                                (comments) => this.state.inputId != comments.id
+                              );
+                              let newComment = {
+                                content: this.state.inputContent,
+                                time: moment().format(
+                                  "YYYY년 MM월 DD일 HH시 mm분 ss초"
+                                ),
+                                userNameComment: this.props.userNameComment,
+                              };
+
+                              return {
+                                commentsList: [...newArr, newComment],
+                                inputContent: "",
+                                formLocation: -1,
+                              };
+                            },
+                            () =>
+                              db
+                                .collection("comments")
+                                .doc(this.state.inputId)
+                                .update(
+                                  this.state.commentsList[
+                                    this.state.commentsList.length - 1
+                                  ]
+                                )
+                          );
+                        } else {
+                          alert("내용을 입력해주세요!");
+                        }
+                      }}
+                    />
+                  </Form>
+                ) : null}
+              </div>
+            )
+          )}
+          <Grid centered style={{ paddingTop: "30px" }}>
             <Pagination
               inverted
               onPageChange={this.handlePaginationChange}
