@@ -25,8 +25,36 @@ function SingleComment(detail) {
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Comment.Actions>
             <Comment.Action
+              style={{ color: "LemonChiffon" }}
+              onClick={() => {
+                //console.log(detail.info.userNameComment)
+                //console.log(detail.userName)
+                if (detail.info.userNameComment == detail.userName && detail.userName != "Stranger") {
+                  /*db.collection("comments")
+                    .doc(detail.info.id)
+                    .delete()
+                    .then((res) => alert("수정 완료"));*/
+                }
+                else {
+                  alert("본인이 작성한 댓글만 수정할 수 있습니다.")
+                }
+              }}
+            >
+              Update
+            </Comment.Action>
+            <Comment.Action
               style={{ color: "salmon" }}
-              onClick={() => alert("삭제됨")}
+              onClick={() => {
+                if (detail.info.userNameComment == detail.userName && detail.userName != "Stranger") {
+                  db.collection("comments")
+                    .doc(detail.info.id)
+                    .delete()
+                    .then((res) => alert("삭제 완료"));
+                }
+                else {
+                  alert("본인이 작성한 댓글만 삭제할 수 있습니다.")
+                }
+              }}
             >
               Delete
             </Comment.Action>
@@ -57,7 +85,7 @@ class Comments extends React.Component {
       .then((ss) => {
         let comments = [];
         ss.forEach((doc) => {
-          comments.push(doc.data());
+          comments.push(Object.assign(doc.data(), { id: doc.id }));
         });
         return comments;
       })
@@ -78,7 +106,10 @@ class Comments extends React.Component {
           </Divider>
 
           {this.state.commentsList.map((comments) => (
-            <SingleComment info={comments} />
+            <SingleComment
+              info={comments}
+              userName={this.props.userNameComment}
+            />
           ))}
 
           <Form reply>

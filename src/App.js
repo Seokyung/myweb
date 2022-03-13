@@ -1,4 +1,6 @@
 import React from "react";
+import { db, auth } from "./fb.js";
+import _ from "lodash";
 import firebase from "firebase/compat/app";
 import {
   Image,
@@ -12,7 +14,6 @@ import {
 import Buttons from "./buttons.js";
 import Comments from "./comments.js";
 import VisitorsModal from "./modal.js";
-import auth from "./fb.js";
 import sunbaGuitar from "./img/sunbaGuitar.jpeg";
 
 var provider = new firebase.auth.GoogleAuthProvider();
@@ -23,9 +24,16 @@ class App extends React.Component {
     this.state = {
       userName: "Stranger",
       isModalOpen: false,
-      visitors: ["럭시", "키젤", "다비치", "흑태풍", "JMT"],
+      visitors: [],
     };
   }
+
+  componentDidMount = () => {
+    db.collection("Basic")
+      .doc("F9ynrM8QgwWt4LcEZ8aK")
+      .get()
+      .then((res) => this.setState({ visitors: res.data().visitors }));
+  };
 
   toggleModal = () =>
     this.setState((prevState) => {
@@ -38,7 +46,7 @@ class App extends React.Component {
         <VisitorsModal
           isOpen={this.state.isModalOpen}
           closeModal={this.toggleModal}
-          visitorsList = {this.state.visitors}
+          visitorsList={this.state.visitors}
         />
         <h1
           style={{
@@ -66,8 +74,30 @@ class App extends React.Component {
                   var token = result.credential.accessToken;
                   // The signed-in user info.
                   var user = result.user;
-                  this.setState({ userName: user.displayName });
+                  return user.displayName;
                   // ...
+                })
+                .then((result) => {
+                  let duplicate = "";
+                  duplicate = _.find(
+                    this.state.visitors,
+                    (name) => name == result
+                  );
+                  if (!duplicate) {
+                    db.collection("Basic")
+                      .doc("F9ynrM8QgwWt4LcEZ8aK")
+                      .update({ visitors: [...this.state.visitors, result] })
+                      .then((res) =>
+                        this.setState((prev) => {
+                          return {
+                            userName: result,
+                            visitors: [...prev.visitors, result],
+                          };
+                        })
+                      );
+                  } else {
+                    this.setState({ userName: result });
+                  }
                 })
                 .catch((error) => {
                   // Handle Errors here.
@@ -96,10 +126,9 @@ class App extends React.Component {
                   var token = result.credential.accessToken;
                   // The signed-in user info.
                   var user = result.user;
-                  return user.displayName;
+                  this.setState({ userName: user.displayName });
                   // ...
                 })
-                .then((result) => this.setState({ userName: result }))
                 .catch((error) => {
                   // Handle Errors here.
                   var errorCode = error.code;

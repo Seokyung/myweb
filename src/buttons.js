@@ -1,4 +1,5 @@
 import React from "react";
+import { db } from "./fb.js";
 import { Button } from "semantic-ui-react";
 
 class Buttons extends React.Component {
@@ -9,6 +10,13 @@ class Buttons extends React.Component {
       visitors: 0,
     };
   }
+
+  componentDidMount = () => {
+    db.collection("Basic")
+      .doc("F9ynrM8QgwWt4LcEZ8aK")
+      .get()
+      .then((res) => this.setState({ likes: res.data().likes }));
+  };
   render() {
     return (
       <div>
@@ -22,11 +30,17 @@ class Buttons extends React.Component {
             pointing: "left",
             content: this.state.likes,
           }}
-          onClick={() =>
-            this.setState((prevState) => {
-              return { likes: prevState.likes + 1 };
-            })
-          }
+          onClick={() => {
+            this.setState(
+              (prevState) => {
+                return { likes: prevState.likes + 1 };
+              },
+              () =>
+                db.collection("Basic")
+                  .doc("F9ynrM8QgwWt4LcEZ8aK")
+                  .update({ likes: this.state.likes })
+            );
+          }}
         />
         <Button
           color="blue"
